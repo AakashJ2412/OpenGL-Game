@@ -21,36 +21,16 @@ struct node
     int south;
     int east;
 };
-const int MAZE_ROWS = 8, MAZE_COLUMNS = 10;
+const int MAZE_ROWS = 10, MAZE_COLUMNS = 10;
 vector<vector<node>> graph;
 glm::vec3 cameraPos = glm::vec3(2 * MAZE_COLUMNS, 2 * MAZE_ROWS, 40.0f);
 glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
-const float cameraSpeed = 0.1f;
+const float cameraSpeed = 0.1f, playerSpeed = 0.1f;
 float screen_zoom = 1, screen_center_x = 0, screen_center_y = 0;
 float camera_rotation_angle = 0;
 
 Timer t60(1.0 / 60);
-
-/* Render the scene with openGL */
-/* Edit this function according to your assignment */
-void draw()
-{
-    // set camera view using lookAt() function, on the basis of current position, front, and up vectors
-    Matrices.view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
-
-    // Compute ViewProject matrix as view/camera might not be changed for this frame (basic scenario)
-    // Don't change unless you are sure!!
-    glm::mat4 VP = Matrices.projection * Matrices.view;
-
-    // Send our transformation to the currently bound shader, in the "MVP" uniform
-    // For each model you render, since the MVP will be different (at least the M part)
-    // Don't change unless you are sure!!
-    glm::mat4 MVP; // MVP = Projection * View * Model
-
-    // Scene render
-    player.draw(VP);
-}
 
 void tick_input(GLFWwindow *window)
 {
@@ -60,19 +40,39 @@ void tick_input(GLFWwindow *window)
     int s = glfwGetKey(window, GLFW_KEY_S);
     if (w)
     {
-        player.set_position(player.position.x, player.position.y + 1);
+        cout<<int((player.position.y - 0.3)/4.0)<<' '<<int((player.position.x +2.0)/4.0)<<'\n';
+        if (graph[int((player.position.y - 0.3)/4.0)][int((player.position.x + 2.0)/4.0)].north == 0)
+        {
+            player.set_position(player.position.x, player.position.y + playerSpeed);
+            cameraPos += cameraSpeed * cameraUp;
+        }
     }
-    if (a)
+    else if (a)
     {
-        player.set_position(player.position.x - 1, player.position.y);
+        cout<<int((player.position.y +2.0)/4.0)<<' '<<int((player.position.x +3.6)/4.0)<<'\n';
+        if (graph[int((player.position.y +2.0)/4.0)][int((player.position.x +3.6)/4.0)].west == 0)
+        {
+            player.set_position(player.position.x - playerSpeed, player.position.y);
+            cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+        }
     }
-    if (s)
+    else if (s)
     {
-        player.set_position(player.position.x, player.position.y - 1);
+        cout<<int((player.position.y +3.6)/4.0)<<' '<<int((player.position.x +2.0)/4.0)<<'\n';
+        if (graph[int((player.position.y +3.6)/4.0)][int((player.position.x +2.0)/4.0)].south == 0)
+        {
+            player.set_position(player.position.x, player.position.y - playerSpeed);
+            cameraPos -= cameraSpeed * cameraUp;
+        }
     }
-    if (d)
+    else if (d)
     {
-        player.set_position(player.position.x+1, player.position.y);
+        cout<<int((player.position.y +2.0)/4.0)<<' '<<int((player.position.x -0.3)/4.0)<<'\n';
+        if (graph[int((player.position.y +2.0)/4.0)][int((player.position.x -0.3)/4.0)].east == 0)
+        {
+            player.set_position(player.position.x + playerSpeed, player.position.y);
+            cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+        }
     }
 }
 
@@ -162,7 +162,7 @@ void make_maze()
     }
 }
 
-void print_maze()
+void print_maze(glm::mat4 VP)
 {
     // clear the color and depth in the frame buffer
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -203,6 +203,9 @@ void print_maze()
     // flag = 1;
     VAO *maze;
     maze = create3DObject(GL_LINES, vertex_temp.size() / 3, vertex_buffer_data, COLOR_GREEN, GL_FILL);
+    Matrices.model = glm::mat4(1.0f);
+    glm::mat4 MVP = VP * Matrices.model;
+    glUniformMatrix4fv(Matrices.MatrixID, 1, GL_FALSE, &MVP[0][0]);
     draw3DObject(maze);
 }
 
@@ -234,6 +237,27 @@ void initGL(GLFWwindow *window, int width, int height)
     cout << "GLSL: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << endl;
 }
 
+/* Render the scene with openGL */
+/* Edit this function according to your assignment */
+void draw()
+{
+    // set camera view using lookAt() function, on the basis of current position, front, and up vectors
+    Matrices.view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+
+    // Compute ViewProject matrix as view/camera might not be changed for this frame (basic scenario)
+    // Don't change unless you are sure!!
+    glm::mat4 VP = Matrices.projection * Matrices.view;
+
+    // Send our transformation to the currently bound shader, in the "MVP" uniform
+    // For each model you render, since the MVP will be different (at least the M part)
+    // Don't change unless you are sure!!
+    glm::mat4 MVP; // MVP = Projection * View * Model
+
+    // Scene render
+    print_maze(VP);
+    player.draw(VP);
+}
+
 int main(int argc, char **argv)
 {
     srand(time(0));
@@ -252,7 +276,6 @@ int main(int argc, char **argv)
 
         if (t60.processTick())
         {
-            print_maze();
             tick_input(window);
             // 60 fps
             // OpenGL Draw commands
