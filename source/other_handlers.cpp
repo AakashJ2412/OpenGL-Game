@@ -6,6 +6,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+#define GLM_ENABLE_EXPERIMENTAL
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
@@ -15,11 +16,13 @@
 
 using namespace std;
 
-void error_callback(int error, const char *description) {
+void error_callback(int error, const char *description)
+{
     fprintf(stderr, "Error: %s\n", description);
 }
 
-void quit(GLFWwindow *window) {
+void quit(GLFWwindow *window)
+{
     glfwDestroyWindow(window);
     glfwTerminate();
     exit(EXIT_SUCCESS);
@@ -27,7 +30,8 @@ void quit(GLFWwindow *window) {
 
 /* Executed when window is resized to 'width' and 'height' */
 /* Modify the bounds of the screen here in glm::ortho or Field of View in glm::Perspective */
-void reshapeWindow(GLFWwindow *window, int width, int height) {
+void reshapeWindow(GLFWwindow *window, int width, int height)
+{
     int fbwidth = width, fbheight = height;
     /* With Retina display on Mac OS X, GLFW's FramebufferSize
        is different from WindowSize */
@@ -36,7 +40,7 @@ void reshapeWindow(GLFWwindow *window, int width, int height) {
     // GLfloat fov = 90.0f;
 
     // sets the viewport of openGL renderer
-    glViewport (0, 0, (GLsizei) fbwidth, (GLsizei) fbheight);
+    glViewport(0, 0, (GLsizei)fbwidth, (GLsizei)fbheight);
 
     // set the projection matrix as perspective
     /* glMatrixMode (GL_PROJECTION);
