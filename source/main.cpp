@@ -13,6 +13,7 @@ GLFWwindow *window;
 **************************/
 int flag = 0;
 Player player;
+Imposter imposter;
 
 struct node
 {
@@ -40,8 +41,8 @@ void tick_input(GLFWwindow *window)
     int s = glfwGetKey(window, GLFW_KEY_S);
     if (w)
     {
-        cout<<int((player.position.y - 0.3)/4.0)<<' '<<int((player.position.x +2.0)/4.0)<<'\n';
-        if (graph[int((player.position.y - 0.3)/4.0)][int((player.position.x + 2.0)/4.0)].north == 0)
+        cout << int((player.position.y - 0.3) / 4.0) << ' ' << int((player.position.x + 2.0) / 4.0) << '\n';
+        if (graph[int((player.position.y - 0.3) / 4.0)][int((player.position.x + 2.0) / 4.0)].north == 0)
         {
             player.set_position(player.position.x, player.position.y + playerSpeed);
             cameraPos += cameraSpeed * cameraUp;
@@ -49,8 +50,8 @@ void tick_input(GLFWwindow *window)
     }
     else if (a)
     {
-        cout<<int((player.position.y +2.0)/4.0)<<' '<<int((player.position.x +3.6)/4.0)<<'\n';
-        if (graph[int((player.position.y +2.0)/4.0)][int((player.position.x +3.6)/4.0)].west == 0)
+        cout << int((player.position.y + 2.0) / 4.0) << ' ' << int((player.position.x + 3.6) / 4.0) << '\n';
+        if (graph[int((player.position.y + 2.0) / 4.0)][int((player.position.x + 3.6) / 4.0)].west == 0)
         {
             player.set_position(player.position.x - playerSpeed, player.position.y);
             cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
@@ -58,8 +59,8 @@ void tick_input(GLFWwindow *window)
     }
     else if (s)
     {
-        cout<<int((player.position.y +3.6)/4.0)<<' '<<int((player.position.x +2.0)/4.0)<<'\n';
-        if (graph[int((player.position.y +3.6)/4.0)][int((player.position.x +2.0)/4.0)].south == 0)
+        cout << int((player.position.y + 3.6) / 4.0) << ' ' << int((player.position.x + 2.0) / 4.0) << '\n';
+        if (graph[int((player.position.y + 3.6) / 4.0)][int((player.position.x + 2.0) / 4.0)].south == 0)
         {
             player.set_position(player.position.x, player.position.y - playerSpeed);
             cameraPos -= cameraSpeed * cameraUp;
@@ -67,8 +68,8 @@ void tick_input(GLFWwindow *window)
     }
     else if (d)
     {
-        cout<<int((player.position.y +2.0)/4.0)<<' '<<int((player.position.x -0.3)/4.0)<<'\n';
-        if (graph[int((player.position.y +2.0)/4.0)][int((player.position.x -0.3)/4.0)].east == 0)
+        cout << int((player.position.y + 2.0) / 4.0) << ' ' << int((player.position.x - 0.3) / 4.0) << '\n';
+        if (graph[int((player.position.y + 2.0) / 4.0)][int((player.position.x - 0.3) / 4.0)].east == 0)
         {
             player.set_position(player.position.x + playerSpeed, player.position.y);
             cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
@@ -217,6 +218,7 @@ void initGL(GLFWwindow *window, int width, int height)
     // Create the models
 
     player = Player(0, 0, COLOR_RED);
+    imposter = Imposter(0, 0, COLOR_RED);
     // Create and compile our GLSL program from the shaders
     programID = LoadShaders("../source/shaders/shader.vert", "../source/shaders/shader.frag");
     // Get a handle for our "MVP" uniform
@@ -256,6 +258,7 @@ void draw()
     // Scene render
     print_maze(VP);
     player.draw(VP);
+    imposter.draw(VP);
 }
 
 int main(int argc, char **argv)
