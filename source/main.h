@@ -6,15 +6,17 @@
 #include <fstream>
 #include <vector>
 #include <stdlib.h>
+#include <queue>
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-
+#define GLT_IMPLEMENTATION
 #define GLM_ENABLE_EXPERIMENTAL
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <gltext.h>
 
 struct color_t
 {
@@ -91,7 +93,11 @@ void reset_screen();
 // ---- Colors ----
 extern const color_t COLOR_RED;
 extern const color_t COLOR_GREEN;
+extern const color_t COLOR_GREEN_MAZE;
 extern const color_t COLOR_BLACK;
 extern const color_t COLOR_BACKGROUND;
+extern const color_t COLOR_BACKGROUND_WIN;
+extern const color_t COLOR_BACKGROUND_LOSS;
+extern const color_t COLOR_EXIT;
 
 #endif
