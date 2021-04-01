@@ -128,7 +128,7 @@ void tick_input(GLFWwindow *window)
     }
     if (s)
     {
-                // get current player position
+        // get current player position
         float up = player.position.y + 1.0f, left = player.position.x - 0.8f, right = player.position.x + 0.5f, down = player.position.y - 1.3f;
         // check if player is contained in one cell
         if (int(left / 4.0) == int(right / 4.0) && down - 0.1f > 0)
@@ -165,7 +165,7 @@ void tick_input(GLFWwindow *window)
     }
     if (d)
     {
-                // get current player position
+        // get current player position
         float up = player.position.y + 1.0f, left = player.position.x - 0.8f, right = player.position.x + 0.5f, down = player.position.y - 1.3f;
         // check if player is contained in one cell
         if (int(up / 4.0) == int(down / 4.0) && right + 0.1f < 4 * MAZE_COLUMNS)
