@@ -1,7 +1,6 @@
 # 2D OpenGL Game
-## Computer Graphics Assignment-1
 
-This assignment involves creating a 2D game using basic openGL functionality. It is done in C++, and all implementations besides OpenGL are coded from scratch using C++ STLs.
+This project involves creating a 2D game using basic openGL functionality. It is done in C++, and all implementations besides OpenGL are coded from scratch using C++ STLs.
 
 #### Installation
 
