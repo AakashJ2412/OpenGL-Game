@@ -35,8 +35,3 @@ The keys to control the player are:
 - D: Move right
 
 By pressing 'q', the player can exit the game at any time.
-
-<br>
-##
-Aakash Jain
-Roll No- 2019101028
